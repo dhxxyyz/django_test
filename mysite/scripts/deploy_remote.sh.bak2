@@ -9,17 +9,12 @@ BRANCH=main   # 또는 master
 mkdir -p ${PROJECT_DIR}
 cd ${PROJECT_DIR}
 
-# 2) Git repo 존재 여부 확인
-if [ -d "$PROJECT_DIR/.git" ]; then
-    echo "[INFO] Git repo exists. Pulling changes..."
-    cd "$PROJECT_DIR"
-    git fetch origin
-    git reset --hard origin/$BRANCH
+# 2) 레포가 없으면 clone, 있으면 reset to remote
+if [ -d "${PROJECT_DIR}.git" ]; then
+  git pull origin main
 else
-    echo "[INFO] Git repo NOT found. Cloning..."
-    rm -rf "$PROJECT_DIR/*"   # 혹시 잔여 파일 있는 경우 대비
-    git clone -b $BRANCH "$REPO_URL" "$PROJECT_DIR"
-    cd "$PROJECT_DIR"
+  git clone https://github.com/gyuseok-1316/django_test.git "$PROJECT_DIR"
+  cd "${PROJECT_DIR}"
 fi
 
 # 3) 가상환경 준비
