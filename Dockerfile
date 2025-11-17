@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # 4. requirements.txt를 컨테이너에 복사하고 의존성 설치
-COPY requirements.txt /app/
+COPY mysite/requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 5. Django 애플리케이션 소스 복사
@@ -24,8 +24,10 @@ RUN mkdir -p /app/staticfiles /app/media
 ENV PYTHONUNBUFFERED 1
 
 # 8. 마이그레이션 및 정적 파일 수집
-RUN python manage.py migrate
-RUN python manage.py collectstatic --noinput
+WORKDIR /app/mysite
+RUN python3 manage.py makemigrations
+RUN python3 manage.py migrate
+RUN python3 manage.py collectstatic --noinput
 
 # 9. 애플리케이션 실행
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
